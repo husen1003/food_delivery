@@ -4,6 +4,7 @@ const {
   crateAdmin,
   getAdminById,
   getAllAdmins,
+  deleteAdminById,
 } = require("../controller/admin");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -12,6 +13,7 @@ const app = express();
 app.get("/", getAllAdmins);
 app.get("/:id", getAdminById);
 app.post("/create", crateAdmin);
+app.delete("/deleteUser/:id", deleteAdminById);
 
 module.exports = app;
 
@@ -53,4 +55,23 @@ module.exports = app;
  *      responses:
  *        default:
  *          description: default response
+ */
+
+/**
+ * @swagger
+ * description: Get Admin
+ * /v1/api/admin/deleteUser/{userId}:
+ *  delete:
+ *      tags: [Admin]
+ *      description: Delete user
+ *      parameters:
+ *        - in: path
+ *          name: userId
+ *          schema:
+ *              type: string
+ *          required: true
+ *          description: string id of user to delete
+ *      responses:
+ *          200:
+ *              description: User that was deleted
  */

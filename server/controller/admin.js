@@ -27,8 +27,15 @@ const crateAdmin = async (req, res) => {
   }
 };
 
+const deleteAdminById = async(req,res)=>{
+const {id=''} = req.params
+const admin = await Admin.findByIdAndDelete(id)
+return res.status(200).json({success:true,message:"admin in successfully deleted"})
+}
+
 module.exports = {
   getAllAdmins,
   getAdminById,
   crateAdmin,
+  deleteAdminById
 };
