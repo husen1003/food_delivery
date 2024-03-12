@@ -5,29 +5,46 @@ const {
   getAdminById,
   getAllAdmins,
   deleteAdminById,
+  Login,
 } = require("../controller/admin");
+const verifyToken = require("../middlewares/verifyToken");
 const ObjectId = mongoose.Types.ObjectId;
 
 const app = express();
 
-app.get("/", getAllAdmins);
+app.get("/", verifyToken, getAllAdmins);
 app.get("/:id", getAdminById);
 app.post("/create", crateAdmin);
 app.delete("/deleteUser/:id", deleteAdminById);
+app.post("/login", Login);
 
 module.exports = app;
 
-// get Admin api
+// // get Admin api
+// /**
+//  * @swagger
+//  *  description: get users
+//  * /v1/api/admin:
+//  *  get:
+//  *      tags: [Admin]
+//  *      summary: Get all admins
+//  *      responses:
+//  *        default:
+//  *          description: default response
+//  */
 /**
  * @swagger
- *  description: get users
  * /v1/api/admin:
- *  get:
- *      tags: [Admin]
- *      summary: Get all admins
- *      responses:
- *        default:
- *          description: default response
+ *   get:
+ *     tags:
+ *       - Admin
+ *     summary: Get All admins
+ *     description: Retrieve a list of all admins
+ *     responses:
+ *       200:
+ *         description: A list of admins
+ *       401:
+ *         description: Unauthorized
  */
 
 // Create Admin api
@@ -74,4 +91,28 @@ module.exports = app;
  *      responses:
  *          200:
  *              description: User that was deleted
+ */
+
+/**
+ * @swagger
+ *  description: Login Admin
+ * /v1/api/admin/login:
+ *  post:
+ *      tags: [Admin]
+ *      summary: Login Admin.
+ *      consumes:
+ *       - application/json
+ *      parameters:
+ *        - in: body
+ *          name: user
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                 type: string
+ *              password:
+ *                type: string
+ *      responses:
+ *        default:
+ *          description: default response
  */

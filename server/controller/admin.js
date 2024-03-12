@@ -1,4 +1,5 @@
 const Admin = require("../models/admin");
+const generateWebToken = require("../utils/generateTokens");
 
 const getAllAdmins = async (req, res) => {
   const data = await Admin.find();
@@ -27,15 +28,40 @@ const crateAdmin = async (req, res) => {
   }
 };
 
-const deleteAdminById = async(req,res)=>{
-const {id=''} = req.params
-const admin = await Admin.findByIdAndDelete(id)
-return res.status(200).json({success:true,message:"admin in successfully deleted"})
-}
+const Login = async (req, res) => {
+  const { email = "", password = "" } = req.body || {};
+  const admin = await Admin.findOne(
+    { email, password },
+    { name: 1, email: 1, _id: 1 }
+  );
+  console.log(admin);
+  if (admin) {
+    const token = await generateWebToken({ id: admin._id });
+    res.status(200).json({
+      message: "Login success!",
+      success: true,
+      token,
+      data: admin,
+    });
+  } else
+    return res.status(401).json({
+      message: "Invalid credentials!",
+      success: false,
+    });
+};
+
+const deleteAdminById = async (req, res) => {
+  const { id = "" } = req.params;
+  const admin = await Admin.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json({ success: true, message: "admin in successfully deleted" });
+};
 
 module.exports = {
   getAllAdmins,
   getAdminById,
   crateAdmin,
-  deleteAdminById
+  deleteAdminById,
+  Login,
 };
